@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    console.log("Hello");
+  console.log("Hello");
   // testing git if working
-})
-
+  // hello, this is Myhkas
+});
