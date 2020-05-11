@@ -10,6 +10,8 @@
 </head>
 
 <body>
+    <!-- NAV ELEMENTS -->
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="./index.html">Lulu's Recipes</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -41,38 +43,41 @@
         </div>
     </nav>
 
+    <!-- JUMBOTRON AND SEARCH ELEMENTS -->
+
     <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-            <form class="text-center m-2">
-                <input type="text" id="userInput" placeholder="try Healthy food with chicken" />
-                <input type="submit" value="Submit" id="userSubmit" />
+        <div class="container justify-center">
+            <form class="form-inline m-2">
+                <input type="search" id="userInput" placeholder="Try Healthy food with chicken" autofocus
+                    class="form-control col-6" aria-label="Search">
+                <input class="btn btn-dark col-2 ml-2" type="submit" value="Search" id="userSubmit" />
             </form>
             <div class="text-center m-2">
-                <button id="mexican">mexican</button>
-                <button id="chinese">chinese</button>
+                <button class="filter btn btn-danger">Mexican</button>
+                <button class="filter btn btn-danger">Chinese</button>
+                <button class="filter btn btn-danger">French</button>
+                <button class="filter btn btn-danger">Italian</button>
+                <button class="filter btn btn-danger">Indian</button>
+                <button class="filter btn btn-danger">American</button>
+                <button class="filter btn btn-danger">Japanese</button>
             </div>
         </div>
     </div>
 
 
+    <!-- RESULTS FROM API CALL -->
 
-    <div class="container">
+    <div class="container justify-center">
         <div id="displayRecipe" class="row">
-            <!-- <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="..." alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                        card's content.</p>
-                </div> -->
+            <!-- content generated for recipes -->
         </div>
     </div>
 
-
-    </div>
-
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="./app.js"></script>
 </body>
 
