@@ -11,33 +11,83 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="./Home.html">Lulu's Recipes</a>
+        <a class="navbar-brand" href="./index.html">Lulu's Recipes</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
                     <a class="nav-link" href="./My_Recipes.html">My Recipes<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="./Create_Recipes.html">Create Recipes</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="./Cart.html">Cart</a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
         </div>
     </nav>
 
+    <div class="jumbotron jumbotron-fluid"
+        style="background-image: url(https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80); background-size: 100%;">
+        <div class="container justify-center">
+            <h1>Create Recipes</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id=“alert” class="alert alert-success mt-2"></div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="exampleFormControlInput1">Name:</label>
+                    <input type="input" class="form-control" id="recipeNameInput" placeholder="name">
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlInput1">Time to Cook:</label>
+                    <input type="input" class="form-control" id="cookTimeInput" placeholder="time">
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlInput1">Ingredients:</label>
+                    <form>
+                        <div class="form-group mb-2">
+                            <input type="input" class="form-control" id="ingredientsInput" placeholder="3 carrots">
+                        </div>
+                        <button id="addIngredients" type="submit" class="btn btn-primary mb-2">+</button>
+                    </form>
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlInput1">Instructions:</label>
+                    <form>
+                        <div class="form-group mb-2">
+                            <input type="input" class="form-control" id="instructionsInput" placeholder="Boil Water">
+                        </div>
+                        <button id="addInstructions" type="submit" class="btn btn-primary mb-2">+</button>
+                    </form>
+                </div>
+                <button id="previewButton" class="btn-primary">preview</button>
+            </div>
+            <div class="col-sm-6">
+                <div id="Preview" class="card mb-2" style="width: 18rem;">
+                    <button id="saveLocalStorage" class="btn-primary">save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
     <script src="./app.js"></script>
 </body>
 
