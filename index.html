@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="./style.css">
-    <title>Lulu</title>
+    <title>Lulu's Recipes - Home</title>
 </head>
 
 <body>
+    <!-- NAV ELEMENTS -->
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="./index.html">Lulu's Recipes</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -41,38 +43,70 @@
         </div>
     </nav>
 
-    <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-            <form class="text-center m-2">
-                <input type="text" id="userInput" placeholder="try Healthy food with chicken" />
-                <input type="submit" value="Submit" id="userSubmit" />
+    <!-- JUMBOTRON AND SEARCH ELEMENTS -->
+
+    <div class="jumbotron jumbotron-fluid m-0"
+        style="background-image: url(https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80); background-size: 100%;">
+        <div class="container justify-center">
+            <form class="form-inline m-2">
+                <input type="search" id="userInput" placeholder="Try Healthy food with chicken" autofocus
+                    class="form-control col-6" aria-label="Search">
+                <input class="btn btn-dark col-2 ml-2" type="submit" value="Search" id="userSubmit"
+                    style="opacity: 90%;" />
             </form>
             <div class="text-center m-2">
-                <button id="mexican">mexican</button>
-                <button id="chinese">chinese</button>
+                <button class="filter btn btn-danger m-1" style="opacity: 90%;">Mexican</button>
+                <button class="filter btn btn-danger m-1" style="opacity: 90%;">Chinese</button>
+                <button class="filter btn btn-danger m-1" style="opacity: 90%;">French</button>
+                <button class="filter btn btn-danger m-1" style="opacity: 90%;">Italian</button>
+                <button class="filter btn btn-danger m-1" style="opacity: 90%;">Indian</button>
+                <button class="filter btn btn-danger m-1" style="opacity: 90%;">American</button>
+                <button class="filter btn btn-danger m-1" style="opacity: 90%;">Japanese</button>
             </div>
         </div>
     </div>
 
 
+    <!-- RESULTS FROM API CALL -->
 
-    <div class="container">
+    <div class="container justify-center">
         <div id="displayRecipe" class="row">
-            <!-- <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="..." alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                        card's content.</p>
-                </div> -->
+            <!-- content generated for recipes -->
         </div>
     </div>
 
+    <!-- <video autoplay loop muted id="myVideo">
+        <source
+            src="https://ak.picdn.net/shutterstock/videos/1028104280/preview/stock-footage-funny-couple-rear-view-dancing-while-cooking-together-in-kitchen-young-active-family-having-fun.mp4"
+            type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="content">
+        <h1>Find and Manage millions of recipes in one click</h1>
+    </div> -->
 
-    </div>
+    <header>
+        <div class="overlay"></div>
+        <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+            <source
+                src="https://storage.coverr.co/videos/ZX75uERqcCXB202uB02rFAT7ZURNraEqxl?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6IjExNDMyN0NEOTRCMUFCMTFERTE3IiwiaWF0IjoxNTg5MjQxMTEyfQ.4VBLVPQNC8_D_UxPjBMn2zD2V3T-hpiq85awpW6o8OM"
+                type="video/mp4">
+        </video>
+        <div class="container h-100">
+            <div class="d-flex h-100 text-center align-items-center">
+                <div class="w-100 text-white">
+                    <h1 class="display-4">Manage your legacy</h1>
+                    <p class="lead mb-0">(Manage your recipes)</p>
+                </div>
+            </div>
+        </div>
+    </header>
 
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="./app.js"></script>
 </body>
 
