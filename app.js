@@ -1,24 +1,21 @@
 $(document).ready(function () {
-  console.log("Hello");
-
-  // testing git if working
-  // test from Hedi 2
-  // hello, this is Myhkas
-  // hi,,this is bhagyashree
-
-  var apiKeyEdamam = "3f642c68bfcff6ece5c16c3331baa7e2";
-  var appIdEdamam = "3da4186d";
-  var searchInput = "chicken";
+  // GLOBAL SCOPE VARIBLES 
 
   var apiKeySpoonacular = "c9fe105f079040448d102d03d9a54c78";
+  var favoriteRecipes = [];
+  var cart = [];
+
+
+  // ON CLICK BUTTONS 
 
   $("#userSubmit").on("click", function (e) {
-    e.preventDefault()
-    $("#displayRecipe").html("")
+    e.preventDefault();
+    $("#displayRecipe").html("");
+    $("header").hide();
     var query = $("#userInput").val()
 
     $.ajax({
-      url: `https://api.spoonacular.com/recipes/search?apiKey=${apiKeySpoonacular}&query=${query}`,
+      url: `https://api.spoonacular.com/recipes/search?apiKey=${apiKeySpoonacular}&query=${query}&number=9`,
       type: "GET",
       dataType: "json",
 
@@ -32,29 +29,37 @@ $(document).ready(function () {
         var ingredientsId = response.results[i].id;
         var servings = response.results[i].servings;
 
-        console.log(recipePicture);
-
 
         // need to add feature to limit string length
-        // need to add feature to limit the height of picture
+        // need to add feature to limit the height of picture --> Done
 
-        $("#displayRecipe").prepend(`
-          <div  id="recipeCard" data-id="${ingredientsId}" class="card m-2" style="width: 18rem;">
-          <img class="card-img-top" src="https://spoonacular.com/recipeImages/${recipePicture}" alt="Card image cap">
-          <h5  class="card-title">${recipeName}</h5>
-          <p class="card-text">Cooktime : ${cookTime} min</p>
-          <p class="card-text">Servings : ${servings} pers</p>
-              </div>`
-        )
+        displayRecipe(recipePicture, recipeName, cookTime, servings, ingredientsId)
       }
 
     });
     var query = $("#userInput").val("")
-
   })
 
-  // add feature to be able to click the entire card instead of h5
-  $(document).on("click", "#recipeCard", function () {
+  // BUTTON TO OPEN RECIPE INSTRUCTION IN NEW PAGE
+
+  $(document).on("click", "#link", function () {
+    var recipeId = parseInt($(this).attr("data-id"));
+
+    $.ajax({
+      url: `https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${apiKeySpoonacular}&includeNutrition=false`,
+      type: "GET",
+      dataType: "json",
+
+    }).then(function (response) {
+      var recipeUrl = response.sourceUrl
+      window.open(recipeUrl);
+
+    })
+  })
+
+  // BUTTON TO SHOW INGREDIENTS
+
+  $(document).on("click", "#info-btn", function () {
     var recipeId = parseInt($(this).attr("data-id"));
 
     $.ajax({
@@ -65,21 +70,107 @@ $(document).ready(function () {
     }).then(function (response) {
       console.log(response);
       var ingredients = [];
+      var amount = [];
+      var unit = [];
+      var list = [];
+
+
       for (i = 0; i < response.extendedIngredients.length; i++) {
         ingredients.push(response.extendedIngredients[i].name);
+        amount.push(response.extendedIngredients[i].amount);
+        unit.push(response.extendedIngredients[i].unit);
+        list.push(amount[i] + " " + ingredients[i] + "(" + unit[i] + ")")
       }
-      console.log(ingredients);
+      console.log(list);
+
+      $(`.hidden-text${recipeId}`).html("")
       for (i = 0; i < ingredients.length; i++) {
-        var target = $(this)
-        $(this).append(`
-          <p>${ingredients[i]}</p>`
-        )
+
+        $(`.hidden-text${recipeId}`).append(`<li>${amount[i]} ${ingredients[i]} (${unit[i]}</li>`)
 
       }
-
     })
-    d
   })
+
+  // FILTER BUTTONS
+
+  $(document).on("click", ".filter", function () {
+    $("#displayRecipe").html("")
+    var query = $(this).text()
+    $("header").hide();
+    $.ajax({
+      url: `https://api.spoonacular.com/recipes/search?apiKey=${apiKeySpoonacular}&query=${query}&number=9`,
+      type: "GET",
+      dataType: "json",
+
+    }).then(function (response) {
+      console.log(response);
+
+      for (let i = 0; i < response.results.length; i++) {
+        var recipeName = response.results[i].title;
+        var recipePicture = response.results[i].image;
+        var cookTime = response.results[i].readyInMinutes;
+        var ingredientsId = response.results[i].id;
+        var servings = response.results[i].servings;
+
+
+        // need to add feature to limit string length
+        // need to add feature to limit the height of picture --> Done
+
+        displayRecipe(recipePicture, recipeName, cookTime, servings, ingredientsId)
+      }
+
+    });
+
+  })
+
+  // BUTTON TO ADD TO FAVORITE LIST
+
+  $(document).on("click", "#fav-btn", function () {
+    var recipeName = ($(this).attr("data-id"));
+    console.log(recipeName);
+
+    addFavorite(recipeName)
+    console.log(favoriteRecipes);
+    $(this).attr("class", "btn btn-success btn-circle btn-sm")
+
+  })
+
+  // Function to display the recipe on the screen
+
+  function displayRecipe(pic, name, time, servings, id) {
+    $("#displayRecipe").prepend(`
+          <div  id="recipeCard" class="card m-2" style="width: 18rem;">
+            <img class="card-img-top" src="https://spoonacular.com/recipeImages/${pic}" alt="Card image cap" style="height:250px">
+            <div class="card-body">
+              <h5  class="card-title">${name}</h5>
+              <p class="card-text">Cooktime : ${time} min</p>
+              <p class="card-text">Servings : ${servings} pers</p>
+              <button id="info-btn" type="button" class="btn btn-danger btn-circle btn-sm" data-id="${id}" data-toggle="collapse" data-target="#ingredients${id}" aria-expanded="false" aria-controls="ingredients${id}">Info</button>
+              <button id="fav-btn" type="button" class="btn btn-danger btn-circle btn-sm" data-id="${name}">Fav</button>
+              <button type="button" class="btn btn-danger btn-circle btn-sm" data-id="${id}">Cart</button>
+              <button id="link" type="button" class="btn btn-danger btn-circle btn-sm" data-id="${id}" href="">Link</button>            
+              </div>
+            <div class="collapse" id="ingredients${id}">
+              <div class="card card-body">
+                <ul class=hidden-text${id}></ul>
+              </div>
+            </div>
+            
+          </div>`
+    )
+  }
+
+  // Function to add to favorite list (need to be improved by using for loop (instead of includes), to be able to remove from favorite list by using splice)
+  function addFavorite(name) {
+    if (favoriteRecipes.includes(name)) {
+      console.log("already fav");
+
+    } else {
+      favoriteRecipes.push(name);
+    }
+  }
+
 
 
 })
@@ -89,78 +180,8 @@ $(document).ready(function () {
   // FOR INGREDIENTS : https://api.spoonacular.com/recipes/716429/information?includeNutrition=false
   // FOR SEARCH : https://api.spoonacular.com/recipes/search?apiKey=c9fe105f079040448d102d03d9a54c78&query=burger
 
-  //   $("#userSubmit").on("click", function (e) {
-  //     e.preventDefault()
-  //     $("#displayRecipe").html("")
-  //     var query = $("#userInput").val()
 
-  //     $.ajax({
-  //       url: `https://api.edamam.com/search?q=${query}&app_id=${appIdEdamam}&app_key=${apiKeyEdamam}`,
-  //       type: "GET",
-  //       dataType: "json",
-
-  //     }).then(function (response) {
-  //       console.log(response);
-
-  //       for (var i = 0; i < response.hits.length; i++) {
-  //         var recipeName = response.hits[i].recipe.label;
-  //         var recipePicture = response.hits[i].recipe.image;
-  //         var cookTime = response.hits[i].recipe.totalTime;
-  //         var ingredients = response.hits[i].recipe.ingredients;
-  //         var calories = Math.round(response.hits[i].recipe.calories);
-
-  //         $("#displayRecipe").prepend(`
-  //     <div class="card m-2" style="width: 18rem;">
-  //     <img class="card-img-top" src="${recipePicture}" alt="Card image cap">
-  //     <div class="card-body">
-  //         <h5 class="card-title">${recipeName}</h5>
-  //         <p class="card-text">Cooktime : ${cookTime} min, with ${ingredients.length} ingredients</p>
-  //         <span class="badge badge-info" data-toggle="tooltip" data-placement="bottom" title="${calories} cal">More info</span>
-  //         </div>`
-  //         )
-  //       }
-
-  //     })
-  //     var query = $("#userInput").val("")
-
-  //   })
-
-  //   $(document).on("click", "button", function () {
-  //     $("#displayRecipe").html("")
-  //     var search = $(this).text()
-
-
-  //     $.ajax({
-  //       url: `https://api.edamam.com/search?q=${search}&app_id=${appIdEdamam}&app_key=${apiKeyEdamam}`,
-  //       type: "GET",
-  //       dataType: "json",
-
-  //     }).then(function (response) {
-  //       console.log(response);
-
-  //       for (var i = 0; i < response.hits.length; i++) {
-  //         var recipeName = response.hits[i].recipe.label;
-  //         var recipePicture = response.hits[i].recipe.image;
-  //         var cookTime = response.hits[i].recipe.totalTime;
-  //         var ingredients = response.hits[i].recipe.ingredients;
-  //         var calories = Math.round(response.hits[i].recipe.calories);
-
-  //         $("#displayRecipe").prepend(`
-  //     <div class="card m-2" style="width: 18rem;">
-  //     <img class="card-img-top" src="${recipePicture}" alt="Card image cap">
-  //     <div class="card-body">
-  //         <h5 class="card-title">${recipeName}</h5>
-  //         <p class="card-text">Cooktime : ${cookTime} min, with ${ingredients.length} ingredients</p>
-  //         <span class="badge badge-info" data-toggle="tooltip" data-placement="bottom" title="${calories} cal">More info</span>
-  //     </div>`
-  //         )
-  //       }
-
-  //     })
-  //   })
-
-
-  // });
+  // PSEUDO CODE
 
   // GLOBAL SCOPE VARIABLES
   // myRecipes : array of objects (recipe)
