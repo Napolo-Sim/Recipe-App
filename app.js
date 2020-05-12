@@ -9,12 +9,13 @@ $(document).ready(function () {
   // ON CLICK BUTTONS 
 
   $("#userSubmit").on("click", function (e) {
-    e.preventDefault()
-    $("#displayRecipe").html("")
+    e.preventDefault();
+    $("#displayRecipe").html("");
+    $("header").hide();
     var query = $("#userInput").val()
 
     $.ajax({
-      url: `https://api.spoonacular.com/recipes/search?apiKey=${apiKeySpoonacular}&query=${query}`,
+      url: `https://api.spoonacular.com/recipes/search?apiKey=${apiKeySpoonacular}&query=${query}&number=9`,
       type: "GET",
       dataType: "json",
 
@@ -96,8 +97,9 @@ $(document).ready(function () {
   $(document).on("click", ".filter", function () {
     $("#displayRecipe").html("")
     var query = $(this).text()
+    $("header").hide();
     $.ajax({
-      url: `https://api.spoonacular.com/recipes/search?apiKey=${apiKeySpoonacular}&query=${query}`,
+      url: `https://api.spoonacular.com/recipes/search?apiKey=${apiKeySpoonacular}&query=${query}&number=9`,
       type: "GET",
       dataType: "json",
 
@@ -168,6 +170,7 @@ $(document).ready(function () {
       favoriteRecipes.push(name);
     }
   }
+
 
 
 })
