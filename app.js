@@ -1,14 +1,55 @@
 $(document).ready(function () {
-  // GLOBAL SCOPE VARIBLES
 
-  $("#alert").hide();
+  // GLOBAL SCOPE VARIBLES -----------------------
+
+
   var apiKeySpoonacular = "c9fe105f079040448d102d03d9a54c78";
   var favoriteRecipes = [];
   var cart = JSON.parse(window.localStorage.getItem("myCart")) || [];
   var myRecipes = JSON.parse(window.localStorage.getItem("myRecipes")) || [];
+  var nbRecipesCart = (window.localStorage.getItem("sizeCart")) || 0;
 
   var myRec = {};
   var ingredientsAPI = [];
+
+  // INIT FUNCTIONS ------------------------------
+
+  // Hide alert on all pages
+  $("#alert").hide();
+
+  // Function to load on cart.html
+
+  if (location.href.endsWith("Cart.html")) {
+    var displayCart = [] || 0;
+
+    // if (nbRecipesCart === 0) {
+    //   $("table").hide()
+    //   $(".container").prepend("<p>You have zero item in cart. Why don't you create recipes, and add some elements to the cart ?</p>")
+    // } else {
+    for (var i = 0; i < cart.length; i++) {
+      // Print text to show the number of recipes
+      displayCart[i] = cart[i].split("#");
+      var indexDisplayCart = displayCart[i];
+
+      $("#recipeAmount").text(`You have ${nbRecipesCart} recipes in your cart`)
+
+      $("#table")
+        .prepend(`
+              <tr>
+                <th data-id="${i}" scope="col">${indexDisplayCart[1]} ${indexDisplayCart[2]}</th>
+                <th data-id="${i}" scope="col">${indexDisplayCart[0]}</th>
+                <th data-id="${i}" scope="col">${indexDisplayCart[3]}</th>
+                <th><div class="form-check">
+                  <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
+                </div></th>
+              </tr>
+              `);
+    }
+    // }
+
+  }
+
+  // Function to load on My_recipes page
 
   if (location.href.endsWith("My_Recipes.html")) {
     for (var i = 0; i < myRecipes.length; i++) {
@@ -32,7 +73,21 @@ $(document).ready(function () {
     }
   }
 
-  // ON CLICK BUTTONS
+  // ON CLICK BUTTONS ---------------------------
+
+  // BUTTON TO CLEAR CART CONTENT
+
+  $("#clearCart").on("click", function () {
+    cart = [];
+    nbRecipesCart = 0;
+    window.localStorage.setItem("sizeCart", 0);
+    window.localStorage.setItem("myCart", JSON.stringify(cart));
+    $("#recipeAmount").text(`You have 0 recipes in your cart`)
+    $("#table").html("")
+  })
+
+  // BUTTON TO DELETE RECIPE on my_recipes.html
+
   $(document).on("click", "#deleteButton", function () {
     var deleteId = $(this).attr("data-id");
     myRecipes.splice(deleteId, 1);
@@ -40,7 +95,7 @@ $(document).ready(function () {
     window.localStorage.setItem("myRecipes", JSON.stringify(myRecipes));
   });
 
-  // GLOBAL SCOPE VARIBLES
+  // BUTTON TO SEARCH RECIPES on index.html
 
   $("#userSubmit").on("click", function (e) {
     e.preventDefault();
@@ -62,9 +117,6 @@ $(document).ready(function () {
         var ingredientsId = response.results[i].id;
         var servings = response.results[i].servings;
 
-        // need to add feature to limit string length
-        // need to add feature to limit the height of picture --> Done
-
         displayRecipe(
           recipePicture,
           recipeName,
@@ -77,7 +129,7 @@ $(document).ready(function () {
     var query = $("#userInput").val("");
   });
 
-  // BUTTON TO OPEN RECIPE INSTRUCTION IN NEW PAGE
+  // BUTTON TO OPEN RECIPE INSTRUCTION IN NEW PAGE on index.html
 
   $(document).on("click", "#link", function () {
     var recipeId = parseInt($(this).attr("data-id"));
@@ -92,7 +144,7 @@ $(document).ready(function () {
     });
   });
 
-  // BUTTON TO SHOW INGREDIENTS
+  // BUTTON TO SHOW INGREDIENTS on index.html
 
   $(document).on("click", "#info-btn", function () {
     var recipeId = parseInt($(this).attr("data-id"));
@@ -124,7 +176,7 @@ $(document).ready(function () {
     });
   });
 
-  //Cart Button for API cal in index.html
+  //CART BUTTON FROM API CALL on index.html
 
   $(document).on("click", "#cartButton", function () {
     var recipeId = parseInt($(this).attr("data-id"));
@@ -145,23 +197,27 @@ $(document).ready(function () {
         unit.push(response.extendedIngredients[i].unit);
         cart.push(
           ingredients[i] +
-            "#" +
-            amount[i] +
-            "#" +
-            "(" +
-            unit[i] +
-            ")" +
-            "#" +
-            recipeName
+          "#" +
+          amount[i] +
+          "#" +
+          "(" +
+          unit[i] +
+          ")" +
+          "#" +
+          recipeName
         );
       }
       cart.sort();
       window.localStorage.setItem("myCart", JSON.stringify(cart));
       console.log(cart);
+      nbRecipesCart++;
+      window.localStorage.setItem("sizeCart", nbRecipesCart);
+      showAlert("Added to Cart!", "success");
     });
   });
 
-  // cart button for myRecipe view
+  // CART BUTTON FOR MY RECIPES on my_recipes.html
+
   $(document).on("click", "#cartBtn", function () {
     var recipeId = parseInt($(this).attr("data-id"));
     var ingredientsList = myRecipes[recipeId].ing;
@@ -174,10 +230,12 @@ $(document).ready(function () {
     cart.sort();
     window.localStorage.setItem("myCart", JSON.stringify(cart));
     //need to fix
+    nbRecipesCart++;
+    window.localStorage.setItem("sizeCart", nbRecipesCart);
     showAlert("Added to Cart!", "success");
   });
 
-  // FILTER BUTTONS
+  // PRE-FILTERED BUTTONS on index.html
 
   $(document).on("click", ".filter", function () {
     $("#displayRecipe").html("");
@@ -197,9 +255,6 @@ $(document).ready(function () {
         var ingredientsId = response.results[i].id;
         var servings = response.results[i].servings;
 
-        // need to add feature to limit string length
-        // need to add feature to limit the height of picture --> Done
-
         displayRecipe(
           recipePicture,
           recipeName,
@@ -211,7 +266,7 @@ $(document).ready(function () {
     });
   });
 
-  // BUTTON TO ADD TO FAVORITE LIST
+  // BUTTON TO ADD TO FAVORITE LIST on index.html
 
   $(document).on("click", "#fav-btn", function () {
     var recipeName = $(this).attr("data-id");
@@ -222,10 +277,28 @@ $(document).ready(function () {
     $(this).attr("class", "btn btn-success btn-circle btn-sm");
   });
 
-  // Function to display the recipe on the screen
+  // CHECKBOX TO STRIKE ITEMS on cart.html
 
-  function displayRecipe(pic, name, time, servings, id) {
-    $("#displayRecipe").prepend(`
+  $(".form-check-input").click(function () {
+    var textLine = $(this).parent().parent().parent()
+    if ($(this).prop("checked") == true) {
+
+      console.log("Checkbox is checked.");
+      textLine.attr("class", "strike");
+    }
+    else if ($(this).prop("checked") == false) {
+      console.log("Checkbox is unchecked.");
+      textLine.attr("class", "normal");
+    }
+  });
+});
+
+// FUNCTIONS ---------------------------------
+
+// Function to display the recipe on the screen 
+
+function displayRecipe(pic, name, time, servings, id) {
+  $("#displayRecipe").prepend(`
           <div  id="recipeCard" class="card m-2" style="width: 18rem;">
             <img class="card-img-top" src="https://spoonacular.com/recipeImages/${pic}" alt="Card image cap" style="height:250px">
             <div class="card-body">
@@ -244,64 +317,65 @@ $(document).ready(function () {
             </div>
             
           </div>`);
+}
+
+// Function to add to favorite list (need to be improved by using for loop (instead of includes), to be able to remove from favorite list by using splice)
+function addFavorite(name) {
+  if (favoriteRecipes.includes(name)) {
+    console.log("already fav");
+  } else {
+    favoriteRecipes.push(name);
   }
+}
 
-  // Function to add to favorite list (need to be improved by using for loop (instead of includes), to be able to remove from favorite list by using splice)
-  function addFavorite(name) {
-    if (favoriteRecipes.includes(name)) {
-      console.log("already fav");
-    } else {
-      favoriteRecipes.push(name);
-    }
+function renderInstructions(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    $("#renderInstructions").append(`<li>${arr[i]}</li>`);
   }
+}
 
-  function renderInstructions(arr) {
-    for (let i = 0; i < arr.length; i++) {
-      $("#renderInstructions").append(`<li>${arr[i]}</li>`);
-    }
+function renderIngredients(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    $("#renderIngredients").append(`<li>${arr[i]}</li>`);
   }
+}
 
-  function renderIngredients(arr) {
-    for (let i = 0; i < arr.length; i++) {
-      $("#renderIngredients").append(`<li>${arr[i]}</li>`);
-    }
-  }
+//Global Vars
+var arrIngredients = [];
+var arrInstructions = [];
+var displayIngredients = [];
 
-  //Global Vars
-  var arrIngredients = [];
-  var arrInstructions = [];
-  var displayIngredients = [];
-  $("#addIngredients").on("click", function (e) {
-    e.preventDefault();
-    var ammountInput = $("#ammountInput").val();
-    var unitInput = $("#unitInput").val();
-    var ingredientsInput = $("#ingredientsInput").val();
-    displayIngredients.push(
-      ammountInput + " " + unitInput + " " + ingredientsInput
-    );
-    arrIngredients.push(
-      ingredientsInput + "#" + ammountInput + "#" + "(" + unitInput + ")"
-    );
-    console.log(arrIngredients);
-    $("#ingredientsInput").val("");
-    $("#ammountInput").val("");
-    $("#unitInput").val("");
-    showAlert("Ingredient Added", "success");
-  });
+$("#addIngredients").on("click", function (e) {
+  e.preventDefault();
+  var ammountInput = $("#ammountInput").val();
+  var unitInput = $("#unitInput").val();
+  var ingredientsInput = $("#ingredientsInput").val();
+  displayIngredients.push(
+    ammountInput + " " + unitInput + " " + ingredientsInput
+  );
+  arrIngredients.push(
+    ingredientsInput + "#" + ammountInput + "#" + "(" + unitInput + ")"
+  );
+  console.log(arrIngredients);
+  $("#ingredientsInput").val("");
+  $("#ammountInput").val("");
+  $("#unitInput").val("");
+  showAlert("Ingredient Added", "success");
+});
 
-  $("#addInstructions").on("click", function (e) {
-    e.preventDefault();
-    var instructionsInput = $("#instructionsInput").val();
-    arrInstructions.push(instructionsInput);
-    console.log(arrInstructions);
-    $("#instructionsInput").val("");
-    showAlert("Instruction Added", "success");
-  });
+$("#addInstructions").on("click", function (e) {
+  e.preventDefault();
+  var instructionsInput = $("#instructionsInput").val();
+  arrInstructions.push(instructionsInput);
+  console.log(arrInstructions);
+  $("#instructionsInput").val("");
+  showAlert("Instruction Added", "success");
+});
 
-  function generateRecipe(name, time, ingredients, instructions) {
-    $(
-      "#Preview"
-    ).prepend(`<div id="recipeCard" class="card m-2" style="width: 18rem;" >
+function generateRecipe(name, time, ingredients, instructions) {
+  $(
+    "#Preview"
+  ).prepend(`<div id="recipeCard" class="card m-2" style="width: 18rem;" >
             <div class="card-body">
                 <h5 class="card-title">${name}</h5>
                 <p class="card-text">Time to Cook : ${time} min</p>
@@ -311,85 +385,54 @@ $(document).ready(function () {
                 <ol id="renderInstructions" class="card-text"></ol>
             </div>
         </div>`);
-    renderInstructions(instructions);
-    renderIngredients(ingredients);
-  }
+  renderInstructions(instructions);
+  renderIngredients(ingredients);
+}
 
-  //Add Notification to tell user added ingredients, instructions etc.
+//Add Notification to tell user added ingredients, instructions etc.
 
-  $("#previewButton").on("click", function () {
-    var recipeName = $("#recipeNameInput").val();
-    var cookTime = $("#cookTimeInput").val();
-    generateRecipe(recipeName, cookTime, displayIngredients, arrInstructions);
+$("#previewButton").on("click", function () {
+  var recipeName = $("#recipeNameInput").val();
+  var cookTime = $("#cookTimeInput").val();
+  generateRecipe(recipeName, cookTime, displayIngredients, arrInstructions);
 
-    //myRecipes
-    myRec.name = recipeName;
-    myRec.time = cookTime;
-    myRec.ing = arrIngredients;
-    myRec.inst = arrInstructions;
-    console.log(myRec);
+  myRec.name = recipeName;
+  myRec.time = cookTime;
+  myRec.ing = arrIngredients;
+  myRec.inst = arrInstructions;
+  console.log(myRec);
 
-    $("#recipeNameInput").val("");
-    $("#cookTimeInput").val("");
-  });
+  $("#recipeNameInput").val("");
+  $("#cookTimeInput").val("");
+});
 
-  function showAlert(str, type) {
-    $("#alert").show();
-    $("#alert").attr("class", `alert alert-${type}`);
-    $("#alert").text(str);
-    window.setTimeout(function () {
-      $("#alert").hide();
-    }, 2000);
-  }
 
-  //Add more data to our recipe Cards? Food Type? Etc...
+// REUSABLE FUNCTION TO SHOW A NOTIFICATION ON ACTION
 
-  $("#saveLocalStorage").on("click", function () {
-    //myRecipes
-    myRecipes.push(myRec);
-    window.localStorage.setItem("myRecipes", JSON.stringify(myRecipes));
-    myRec = {};
-    arrIngredients = [];
-    arrInstructions = [];
-    console.log(myRecipes);
-    showAlert("Recipe saved", "success");
-    $("#Preview").html("");
-  });
+function showAlert(str, type) {
+  $("#alert").show();
+  $("#alert").attr("class", `alert alert-${type}`);
+  $("#alert").text(str);
+  window.setTimeout(function () {
+    $("#alert").hide();
+  }, 2000);
+}
+
+//Add more data to our recipe Cards? Food Type? Etc...
+
+// BUTTON SAVE MY RECIPE on create_recipes.html
+
+$("#saveLocalStorage").on("click", function () {
+  //myRecipes
+  myRecipes.push(myRec);
+  window.localStorage.setItem("myRecipes", JSON.stringify(myRecipes));
+  myRec = {};
+  arrIngredients = [];
+  arrInstructions = [];
+  console.log(myRecipes);
+  showAlert("Recipe saved", "success");
+  $("#Preview").html("");
+});
 
   // FOR INGREDIENTS : https://api.spoonacular.com/recipes/716429/information?includeNutrition=false
   // FOR SEARCH : https://api.spoonacular.com/recipes/search?apiKey=c9fe105f079040448d102d03d9a54c78&query=burger
-
-  // PSEUDO CODE
-
-  // GLOBAL SCOPE VARIABLES
-  // myRecipes : array of objects (recipe)
-  // recipe : object (name, method, ingredients, cooking time, portions ...)
-  // cart : array
-  // favoriteRecipes : array (IDs of recipes)
-
-  // CLICK BUTTONS
-  // HOME : Search Button to get start the API request
-  // HOME : View Recipe Button to see the details of a recipe
-  // HOME : filter recipes by categories
-  // MY_RECIPES : Add button to pre-validate information and see it on the preview
-  // MY_RECIPES : Submit button to push the recipe in local storage
-
-  // APIs TESTING
-  // test a few APIs to understand how are structured the items
-
-  // FUNCTIONS
-  // HOME - INIT : Render suggested recipes on page load, using API results
-  // HOME - INIT : Render caroussel with my recipes on page load + Handle case with zero recipes, using myRecipes array
-  // MY_RECIPES - INIT : Render my recipes on page load + Handle case with zero recipes, using myRecipes array
-  // CREATE_RECIPES : preview function (careful for mobile display)
-  // CART - INIT : load items from myRecipes.recipe.ingredients
-
-  // ALL : Show alert (success, danger, primary)// ALL : Show alert (success, danger, primary)
-});
-// HOME - INIT : Render suggested recipes on page load, using API results
-// HOME - INIT : Render caroussel with my recipes on page load + Handle case with zero recipes, using myRecipes array
-// MY_RECIPES - INIT : Render my recipes on page load + Handle case with zero recipes, using myRecipes array
-// CREATE_RECIPES : preview function (careful for mobile display)
-// CART - INIT : load items from myRecipes.recipe.ingredients
-
-// ALL : Show alert (success, danger, primary)// ALL : Show alert (success, danger, primary)
