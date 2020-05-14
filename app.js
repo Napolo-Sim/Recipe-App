@@ -1,21 +1,23 @@
 $(document).ready(function () {
-  // GLOBAL SCOPE VARIBLES 
+  // GLOBAL SCOPE VARIBLES
 
-  $("#alert").hide()
+  $("#alert").hide();
   var apiKeySpoonacular = "c9fe105f079040448d102d03d9a54c78";
   var favoriteRecipes = [];
-  var cart = [];
+  var cart = JSON.parse(window.localStorage.getItem("myCart")) || [];
   var myRecipes = JSON.parse(window.localStorage.getItem("myRecipes")) || [];
+
   var myRec = {};
+  var ingredientsAPI = [];
 
-  if (location.href.endsWith('My_Recipes.html')) {
-
+  if (location.href.endsWith("My_Recipes.html")) {
     for (var i = 0; i < myRecipes.length; i++) {
-      $("#displayMyrecipes").prepend(`<div id="recipeCard${i}" class="card m-2" style="width: 18rem;" >
+      $("#displayMyrecipes")
+        .prepend(`<div id="recipeCard${i}" class="card m-2" style="width: 18rem;" >
   <div class="card-body">
       <button type="button" class="btn btn-primary btn-circle btn-sm" data-id=${i} >Edit</button>
       <button type="button" id="deleteButton" class="btn btn-danger btn-circle btn-sm" data-id=${i}>Delete</button>
-      <button type="button" class="btn btn-warning btn-circle btn-sm" data-id=${i}>Cart</button>
+      <button type="button" id="cartBtn" class="btn btn-warning btn-circle btn-sm" data-id=${i}>Cart</button>
     
       <h5 class="card-title">${myRecipes[i].name}</h5>
       <p class="card-text">Time to Cook : ${myRecipes[i].time} min</p>
@@ -30,28 +32,26 @@ $(document).ready(function () {
     }
   }
 
-
-  // ON CLICK BUTTONS 
+  // ON CLICK BUTTONS
   $(document).on("click", "#deleteButton", function () {
     var deleteId = $(this).attr("data-id");
     myRecipes.splice(deleteId, 1);
     $(`#recipeCard${deleteId}`).remove();
     window.localStorage.setItem("myRecipes", JSON.stringify(myRecipes));
+  });
 
-  })
-
+  // GLOBAL SCOPE VARIBLES
 
   $("#userSubmit").on("click", function (e) {
     e.preventDefault();
     $("#displayRecipe").html("");
     $("header").hide();
-    var query = $("#userInput").val()
+    var query = $("#userInput").val();
 
     $.ajax({
       url: `https://api.spoonacular.com/recipes/search?apiKey=${apiKeySpoonacular}&query=${query}&number=9`,
       type: "GET",
       dataType: "json",
-
     }).then(function (response) {
       console.log(response);
 
@@ -62,16 +62,20 @@ $(document).ready(function () {
         var ingredientsId = response.results[i].id;
         var servings = response.results[i].servings;
 
-
         // need to add feature to limit string length
         // need to add feature to limit the height of picture --> Done
 
-        displayRecipe(recipePicture, recipeName, cookTime, servings, ingredientsId)
+        displayRecipe(
+          recipePicture,
+          recipeName,
+          cookTime,
+          servings,
+          ingredientsId
+        );
       }
-
     });
-    var query = $("#userInput").val("")
-  })
+    var query = $("#userInput").val("");
+  });
 
   // BUTTON TO OPEN RECIPE INSTRUCTION IN NEW PAGE
 
@@ -82,13 +86,11 @@ $(document).ready(function () {
       url: `https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${apiKeySpoonacular}&includeNutrition=false`,
       type: "GET",
       dataType: "json",
-
     }).then(function (response) {
-      var recipeUrl = response.sourceUrl
+      var recipeUrl = response.sourceUrl;
       window.open(recipeUrl);
-
-    })
-  })
+    });
+  });
 
   // BUTTON TO SHOW INGREDIENTS
 
@@ -99,7 +101,6 @@ $(document).ready(function () {
       url: `https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${apiKeySpoonacular}&includeNutrition=false`,
       type: "GET",
       dataType: "json",
-
     }).then(function (response) {
       console.log(response);
       var ingredients = [];
@@ -107,35 +108,85 @@ $(document).ready(function () {
       var unit = [];
       var list = [];
 
+      for (i = 0; i < response.extendedIngredients.length; i++) {
+        ingredients.push(response.extendedIngredients[i].name);
+        amount.push(response.extendedIngredients[i].amount);
+        unit.push(response.extendedIngredients[i].unit);
+        list.push(ingredients[i] + " " + amount[i] + "(" + unit[i] + ")");
+      }
+
+      $(`.hidden-text${recipeId}`).html("");
+      for (i = 0; i < ingredients.length; i++) {
+        $(`.hidden-text${recipeId}`).append(
+          `<li>${amount[i]} ${ingredients[i]} (${unit[i]})</li>`
+        );
+      }
+    });
+  });
+
+  //Cart Button for API cal in index.html
+
+  $(document).on("click", "#cartButton", function () {
+    var recipeId = parseInt($(this).attr("data-id"));
+    var recipeName = $(this).attr("data-name");
+    $.ajax({
+      url: `https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${apiKeySpoonacular}&includeNutrition=false`,
+      type: "GET",
+      dataType: "json",
+    }).then(function (response) {
+      //console.log(response);
+      var ingredients = [];
+      var amount = [];
+      var unit = [];
 
       for (i = 0; i < response.extendedIngredients.length; i++) {
         ingredients.push(response.extendedIngredients[i].name);
         amount.push(response.extendedIngredients[i].amount);
         unit.push(response.extendedIngredients[i].unit);
-        list.push(amount[i] + " " + ingredients[i] + "(" + unit[i] + ")")
+        cart.push(
+          ingredients[i] +
+            "#" +
+            amount[i] +
+            "#" +
+            "(" +
+            unit[i] +
+            ")" +
+            "#" +
+            recipeName
+        );
       }
-      console.log(list);
+      cart.sort();
+      window.localStorage.setItem("myCart", JSON.stringify(cart));
+      console.log(cart);
+    });
+  });
 
-      $(`.hidden-text${recipeId}`).html("")
-      for (i = 0; i < ingredients.length; i++) {
-
-        $(`.hidden-text${recipeId}`).append(`<li>${amount[i]} ${ingredients[i]} (${unit[i]}</li>`)
-
-      }
-    })
-  })
+  // cart button for myRecipe view
+  $(document).on("click", "#cartBtn", function () {
+    var recipeId = parseInt($(this).attr("data-id"));
+    var ingredientsList = myRecipes[recipeId].ing;
+    var tempIng = [];
+    for (let i = 0; i < ingredientsList.length; i++) {
+      var tempIng = ingredientsList[i] + "#" + myRecipes[recipeId].name;
+      cart.push(tempIng);
+    }
+    console.log(cart);
+    cart.sort();
+    window.localStorage.setItem("myCart", JSON.stringify(cart));
+    //need to fix
+    showAlert("Added to Cart!", "success");
+  });
 
   // FILTER BUTTONS
 
   $(document).on("click", ".filter", function () {
-    $("#displayRecipe").html("")
-    var query = $(this).text()
+    $("#displayRecipe").html("");
+    var query = $(this).text();
     $("header").hide();
     $.ajax({
       url: `https://api.spoonacular.com/recipes/search?apiKey=${apiKeySpoonacular}&query=${query}&number=9`,
       type: "GET",
       dataType: "json",
-
     }).then(function (response) {
       console.log(response);
 
@@ -146,29 +197,30 @@ $(document).ready(function () {
         var ingredientsId = response.results[i].id;
         var servings = response.results[i].servings;
 
-
         // need to add feature to limit string length
         // need to add feature to limit the height of picture --> Done
 
-        displayRecipe(recipePicture, recipeName, cookTime, servings, ingredientsId)
+        displayRecipe(
+          recipePicture,
+          recipeName,
+          cookTime,
+          servings,
+          ingredientsId
+        );
       }
-
     });
-
-  })
+  });
 
   // BUTTON TO ADD TO FAVORITE LIST
 
   $(document).on("click", "#fav-btn", function () {
-    var recipeName = ($(this).attr("data-id"));
+    var recipeName = $(this).attr("data-id");
     console.log(recipeName);
 
-    addFavorite(recipeName)
+    addFavorite(recipeName);
     console.log(favoriteRecipes);
-    $(this).attr("class", "btn btn-success btn-circle btn-sm")
-  })
-
-
+    $(this).attr("class", "btn btn-success btn-circle btn-sm");
+  });
 
   // Function to display the recipe on the screen
 
@@ -177,12 +229,12 @@ $(document).ready(function () {
           <div  id="recipeCard" class="card m-2" style="width: 18rem;">
             <img class="card-img-top" src="https://spoonacular.com/recipeImages/${pic}" alt="Card image cap" style="height:250px">
             <div class="card-body">
-              <h5  class="card-title">${name}</h5>
+              <h5  id= "recName" class="card-title">${name}</h5>
               <p class="card-text">Cooktime : ${time} min</p>
               <p class="card-text">Servings : ${servings} pers</p>
               <button id="info-btn" type="button" class="btn btn-danger btn-circle btn-sm" data-id="${id}" data-toggle="collapse" data-target="#ingredients${id}" aria-expanded="false" aria-controls="ingredients${id}">Info</button>
               <button id="fav-btn" type="button" class="btn btn-danger btn-circle btn-sm" data-id="${name}">Fav</button>
-              <button type="button" class="btn btn-danger btn-circle btn-sm" data-id="${id}">Cart</button>
+              <button id="cartButton" type="button" class="btn btn-danger btn-circle btn-sm" data-id = "${id}" data-name="${name}">Cart</button>
               <button id="link" type="button" class="btn btn-danger btn-circle btn-sm" data-id="${id}" href="">Link</button>            
               </div>
             <div class="collapse" id="ingredients${id}">
@@ -191,15 +243,13 @@ $(document).ready(function () {
               </div>
             </div>
             
-          </div>`
-    )
+          </div>`);
   }
 
   // Function to add to favorite list (need to be improved by using for loop (instead of includes), to be able to remove from favorite list by using splice)
   function addFavorite(name) {
     if (favoriteRecipes.includes(name)) {
       console.log("already fav");
-
     } else {
       favoriteRecipes.push(name);
     }
@@ -220,15 +270,24 @@ $(document).ready(function () {
   //Global Vars
   var arrIngredients = [];
   var arrInstructions = [];
-
+  var displayIngredients = [];
   $("#addIngredients").on("click", function (e) {
     e.preventDefault();
+    var ammountInput = $("#ammountInput").val();
+    var unitInput = $("#unitInput").val();
     var ingredientsInput = $("#ingredientsInput").val();
-    arrIngredients.push(ingredientsInput);
+    displayIngredients.push(
+      ammountInput + " " + unitInput + " " + ingredientsInput
+    );
+    arrIngredients.push(
+      ingredientsInput + "#" + ammountInput + "#" + "(" + unitInput + ")"
+    );
     console.log(arrIngredients);
     $("#ingredientsInput").val("");
+    $("#ammountInput").val("");
+    $("#unitInput").val("");
     showAlert("Ingredient Added", "success");
-  })
+  });
 
   $("#addInstructions").on("click", function (e) {
     e.preventDefault();
@@ -237,11 +296,12 @@ $(document).ready(function () {
     console.log(arrInstructions);
     $("#instructionsInput").val("");
     showAlert("Instruction Added", "success");
-  })
-
+  });
 
   function generateRecipe(name, time, ingredients, instructions) {
-    $("#Preview").prepend(`<div id="recipeCard" class="card m-2" style="width: 18rem;" >
+    $(
+      "#Preview"
+    ).prepend(`<div id="recipeCard" class="card m-2" style="width: 18rem;" >
             <div class="card-body">
                 <h5 class="card-title">${name}</h5>
                 <p class="card-text">Time to Cook : ${time} min</p>
@@ -257,11 +317,10 @@ $(document).ready(function () {
 
   //Add Notification to tell user added ingredients, instructions etc.
 
-
   $("#previewButton").on("click", function () {
     var recipeName = $("#recipeNameInput").val();
     var cookTime = $("#cookTimeInput").val();
-    generateRecipe(recipeName, cookTime, arrIngredients, arrInstructions);
+    generateRecipe(recipeName, cookTime, displayIngredients, arrInstructions);
 
     //myRecipes
     myRec.name = recipeName;
@@ -272,8 +331,7 @@ $(document).ready(function () {
 
     $("#recipeNameInput").val("");
     $("#cookTimeInput").val("");
-  })
-
+  });
 
   function showAlert(str, type) {
     $("#alert").show();
@@ -281,10 +339,8 @@ $(document).ready(function () {
     $("#alert").text(str);
     window.setTimeout(function () {
       $("#alert").hide();
-    }, 2000)
+    }, 2000);
   }
-
-
 
   //Add more data to our recipe Cards? Food Type? Etc...
 
@@ -298,17 +354,10 @@ $(document).ready(function () {
     console.log(myRecipes);
     showAlert("Recipe saved", "success");
     $("#Preview").html("");
-  })
-
-  //On Save, CLEAR Preview 
-
-})
-
-
+  });
 
   // FOR INGREDIENTS : https://api.spoonacular.com/recipes/716429/information?includeNutrition=false
   // FOR SEARCH : https://api.spoonacular.com/recipes/search?apiKey=c9fe105f079040448d102d03d9a54c78&query=burger
-
 
   // PSEUDO CODE
 
@@ -317,7 +366,6 @@ $(document).ready(function () {
   // recipe : object (name, method, ingredients, cooking time, portions ...)
   // cart : array
   // favoriteRecipes : array (IDs of recipes)
-
 
   // CLICK BUTTONS
   // HOME : Search Button to get start the API request
@@ -329,7 +377,6 @@ $(document).ready(function () {
   // APIs TESTING
   // test a few APIs to understand how are structured the items
 
-
   // FUNCTIONS
   // HOME - INIT : Render suggested recipes on page load, using API results
   // HOME - INIT : Render caroussel with my recipes on page load + Handle case with zero recipes, using myRecipes array
@@ -337,5 +384,12 @@ $(document).ready(function () {
   // CREATE_RECIPES : preview function (careful for mobile display)
   // CART - INIT : load items from myRecipes.recipe.ingredients
 
-  // ALL : Show alert (success, danger, primary)
+  // ALL : Show alert (success, danger, primary)// ALL : Show alert (success, danger, primary)
+});
+// HOME - INIT : Render suggested recipes on page load, using API results
+// HOME - INIT : Render caroussel with my recipes on page load + Handle case with zero recipes, using myRecipes array
+// MY_RECIPES - INIT : Render my recipes on page load + Handle case with zero recipes, using myRecipes array
+// CREATE_RECIPES : preview function (careful for mobile display)
+// CART - INIT : load items from myRecipes.recipe.ingredients
 
+// ALL : Show alert (success, danger, primary)// ALL : Show alert (success, danger, primary)
