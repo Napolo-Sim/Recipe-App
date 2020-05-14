@@ -326,6 +326,8 @@ $(document).ready(function () {
     arrIngredients = [];
     arrInstructions = [];
     console.log(myRecipes);
+    showAlert("Recipe saved", "success");
+    $("#Preview").html("");
   });
 
   //On Save, CLEAR Preview
