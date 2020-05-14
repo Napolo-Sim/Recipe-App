@@ -75,6 +75,17 @@ $(document).ready(function () {
 
   // ON CLICK BUTTONS ---------------------------
 
+  // BUTTON TO GET PDF FILE
+
+  $("#pdf").on("click", function () {
+    console.log(window.location.href);
+    $.ajax({
+      url: `http://api.pdflayer.com/api/convert?access_key=4e0027132b927229545c6c2ab2dfd541&document_url=${window.location.href}&document_name=My_cart.pdf`,
+      type: "GET",
+      dataType: "json",
+    })
+  })
+
   // BUTTON TO CLEAR CART CONTENT
 
   $("#clearCart").on("click", function () {
