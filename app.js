@@ -17,7 +17,7 @@ $(document).ready(function () {
   <div class="card-body">
       <button type="button" class="btn btn-primary btn-circle btn-sm" data-id=${i} >Edit</button>
       <button type="button" id="deleteButton" class="btn btn-danger btn-circle btn-sm" data-id=${i}>Delete</button>
-      <button type="button" class="btn btn-warning btn-circle btn-sm" data-id=${i}>Cart</button>
+      <button type="button" id="cartBtn" class="btn btn-warning btn-circle btn-sm" data-id=${i}>Cart</button>
     
       <h5 class="card-title">${myRecipes[i].name}</h5>
       <p class="card-text">Time to Cook : ${myRecipes[i].time} min</p>
@@ -124,7 +124,7 @@ $(document).ready(function () {
     });
   });
 
-  //Cart Button
+  //Cart Button for API cal in index.html
 
   $(document).on("click", "#cartButton", function () {
     var recipeId = parseInt($(this).attr("data-id"));
@@ -147,10 +147,11 @@ $(document).ready(function () {
           ingredients[i] +
             "#" +
             amount[i] +
+            "#" +
             "(" +
             unit[i] +
             ")" +
-            "*" +
+            "#" +
             recipeName
         );
       }
@@ -158,6 +159,22 @@ $(document).ready(function () {
       window.localStorage.setItem("myCart", JSON.stringify(cart));
       console.log(cart);
     });
+  });
+
+  // cart button for myRecipe view
+  $(document).on("click", "#cartBtn", function () {
+    var recipeId = parseInt($(this).attr("data-id"));
+    var ingredientsList = myRecipes[recipeId].ing;
+    var tempIng = [];
+    for (let i = 0; i < ingredientsList.length; i++) {
+      var tempIng = ingredientsList[i] + "#" + myRecipes[recipeId].name;
+      cart.push(tempIng);
+    }
+    console.log(cart);
+    cart.sort();
+    window.localStorage.setItem("myCart", JSON.stringify(cart));
+    //need to fix
+    showAlert("Added to Cart!", "success");
   });
 
   // FILTER BUTTONS
@@ -253,13 +270,22 @@ $(document).ready(function () {
   //Global Vars
   var arrIngredients = [];
   var arrInstructions = [];
-
+  var displayIngredients = [];
   $("#addIngredients").on("click", function (e) {
     e.preventDefault();
+    var ammountInput = $("#ammountInput").val();
+    var unitInput = $("#unitInput").val();
     var ingredientsInput = $("#ingredientsInput").val();
-    arrIngredients.push(ingredientsInput);
+    displayIngredients.push(
+      ammountInput + " " + unitInput + " " + ingredientsInput
+    );
+    arrIngredients.push(
+      ingredientsInput + "#" + ammountInput + "#" + "(" + unitInput + ")"
+    );
     console.log(arrIngredients);
     $("#ingredientsInput").val("");
+    $("#ammountInput").val("");
+    $("#unitInput").val("");
     showAlert("Ingredient Added", "success");
   });
 
@@ -294,7 +320,7 @@ $(document).ready(function () {
   $("#previewButton").on("click", function () {
     var recipeName = $("#recipeNameInput").val();
     var cookTime = $("#cookTimeInput").val();
-    generateRecipe(recipeName, cookTime, arrIngredients, arrInstructions);
+    generateRecipe(recipeName, cookTime, displayIngredients, arrInstructions);
 
     //myRecipes
     myRec.name = recipeName;
@@ -330,35 +356,40 @@ $(document).ready(function () {
     $("#Preview").html("");
   });
 
-  //On Save, CLEAR Preview
+  // FOR INGREDIENTS : https://api.spoonacular.com/recipes/716429/information?includeNutrition=false
+  // FOR SEARCH : https://api.spoonacular.com/recipes/search?apiKey=c9fe105f079040448d102d03d9a54c78&query=burger
+
+  // PSEUDO CODE
+
+  // GLOBAL SCOPE VARIABLES
+  // myRecipes : array of objects (recipe)
+  // recipe : object (name, method, ingredients, cooking time, portions ...)
+  // cart : array
+  // favoriteRecipes : array (IDs of recipes)
+
+  // CLICK BUTTONS
+  // HOME : Search Button to get start the API request
+  // HOME : View Recipe Button to see the details of a recipe
+  // HOME : filter recipes by categories
+  // MY_RECIPES : Add button to pre-validate information and see it on the preview
+  // MY_RECIPES : Submit button to push the recipe in local storage
+
+  // APIs TESTING
+  // test a few APIs to understand how are structured the items
+
+  // FUNCTIONS
+  // HOME - INIT : Render suggested recipes on page load, using API results
+  // HOME - INIT : Render caroussel with my recipes on page load + Handle case with zero recipes, using myRecipes array
+  // MY_RECIPES - INIT : Render my recipes on page load + Handle case with zero recipes, using myRecipes array
+  // CREATE_RECIPES : preview function (careful for mobile display)
+  // CART - INIT : load items from myRecipes.recipe.ingredients
+
+  // ALL : Show alert (success, danger, primary)// ALL : Show alert (success, danger, primary)
 });
-
-// FOR INGREDIENTS : https://api.spoonacular.com/recipes/716429/information?includeNutrition=false
-// FOR SEARCH : https://api.spoonacular.com/recipes/search?apiKey=c9fe105f079040448d102d03d9a54c78&query=burger
-
-// PSEUDO CODE
-
-// GLOBAL SCOPE VARIABLES
-// myRecipes : array of objects (recipe)
-// recipe : object (name, method, ingredients, cooking time, portions ...)
-// cart : array
-// favoriteRecipes : array (IDs of recipes)
-
-// CLICK BUTTONS
-// HOME : Search Button to get start the API request
-// HOME : View Recipe Button to see the details of a recipe
-// HOME : filter recipes by categories
-// MY_RECIPES : Add button to pre-validate information and see it on the preview
-// MY_RECIPES : Submit button to push the recipe in local storage
-
-// APIs TESTING
-// test a few APIs to understand how are structured the items
-
-// FUNCTIONS
 // HOME - INIT : Render suggested recipes on page load, using API results
 // HOME - INIT : Render caroussel with my recipes on page load + Handle case with zero recipes, using myRecipes array
 // MY_RECIPES - INIT : Render my recipes on page load + Handle case with zero recipes, using myRecipes array
 // CREATE_RECIPES : preview function (careful for mobile display)
 // CART - INIT : load items from myRecipes.recipe.ingredients
 
-// ALL : Show alert (success, danger, primary)
+// ALL : Show alert (success, danger, primary)// ALL : Show alert (success, danger, primary)
