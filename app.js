@@ -31,7 +31,7 @@ $(document).ready(function () {
             displayCart[i] = cart[i].split("#");
             var indexDisplayCart = displayCart[i];
 
-            $("#recipeAmount").text(`You have ${nbRecipesCart} recipes in your cart`)
+            $("#recipeAmount").text(`You have ${nbRecipesCart} recipe(s) in your cart`)
 
             $("#table")
                 .append(`
@@ -95,7 +95,7 @@ $(document).ready(function () {
         nbRecipesCart = 0;
         window.localStorage.setItem("sizeCart", 0);
         window.localStorage.setItem("myCart", JSON.stringify(cart));
-        $("#recipeAmount").text(`You have 0 recipes in your cart`)
+        $("#recipeAmount").text(`You have 0 recipe(s) in your cart`)
         $("#table").html("")
     })
 
@@ -318,10 +318,10 @@ function displayRecipe(pic, name, time, servings, id) {
               <h5  id= "recName" class="card-title">${name}</h5>
               <p class="card-text">Cooktime : ${time} min</p>
               <p class="card-text">Servings : ${servings} pers</p>
-              <button id="info-btn" type="button" class="btn btn-danger btn-circle btn-sm" data-id="${id}" data-toggle="collapse" data-target="#ingredients${id}" aria-expanded="false" aria-controls="ingredients${id}">Info</button>
+              <button id="info-btn" type="button" class="btn btn-secondary btn-circle btn-sm" data-id="${id}" data-toggle="collapse" data-target="#ingredients${id}" aria-expanded="false" aria-controls="ingredients${id}">Info</button>
               <button id="fav-btn" type="button" class="btn btn-danger btn-circle btn-sm" data-id="${name}">Fav</button>
-              <button id="cartButton" type="button" class="btn btn-danger btn-circle btn-sm" data-id = "${id}" data-name="${name}">Cart</button>
-              <button id="link" type="button" class="btn btn-danger btn-circle btn-sm" data-id="${id}" href="">Link</button>            
+              <button id="cartButton" type="button" class="btn btn-warning btn-circle btn-sm" data-id = "${id}" data-name="${name}">Cart</button>
+              <button id="link" type="button" class="btn btn-info btn-circle btn-sm" data-id="${id}" href="">Link</button>            
               </div>
             <div class="collapse" id="ingredients${id}">
               <div class="card card-body">
@@ -367,7 +367,8 @@ $("#addIngredients").on("click", function (e) {
         ammountInput + " " + unitInput + " " + ingredientsInput
     );
     arrIngredients.push(
-        ingredientsInput + "#" + ammountInput + "#" + "(" + unitInput + ")"
+        //Removed "#" and replaced with " "; make sure there is no conflict
+        ingredientsInput + " " + ammountInput + " " + "(" + unitInput + ")"
     );
     console.log(arrIngredients);
     $("#ingredientsInput").val("");
