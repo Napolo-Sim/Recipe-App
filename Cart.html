@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style.css" />
     <title>Lulu's - Cart</title>
 </head>
 
@@ -21,7 +21,6 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="./My_Recipes.html">My Recipes <span class="sr-only"></span></a>
@@ -50,13 +49,37 @@
 
     <!-- JUMBOTRON AND SEARCH ELEMENTS -->
 
-    <div class="jumbotron jumbotron-fluid"
-        style="background-image: url(https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80); background-size: 100%;">
+    <div class="jumbotron jumbotron-fluid" style="
+        background-image: url(https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80);
+        background-size: 100%;
+      ">
         <div class="container justify-center">
             <h1>Cart</h1>
         </div>
     </div>
 
+    <!-- Displayed Ingredients & Cart List -->
+    <div class="container">
+        <div class="row">
+            <h5 id="recipeAmount"></h5>
+            <button id="clearCart" class="mb-5 btn btn-primary mr-2">Clear</button>
+            <button id="pdf" class="mb-5 btn btn-primary mr-2">PDF</button>
+        </div>
+        <div class="row">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Ingredients</th>
+                        <th scope="col">Recipe</th>
+                    </tr>
+                <tbody id="table">
+
+                </tbody>
+                </thead>
+            </table>
+        </div>
+    </div>
     <!-- SCRIPTS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
