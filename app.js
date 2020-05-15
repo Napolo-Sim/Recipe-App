@@ -9,7 +9,7 @@ $(document).ready(function () {
   var myRecipes = JSON.parse(window.localStorage.getItem("myRecipes")) || [];
   var nbRecipesCart = (window.localStorage.getItem("sizeCart")) || 0;
 
-  var myRec = {};
+
   var ingredientsAPI = [];
 
   // INIT FUNCTIONS ------------------------------
@@ -83,6 +83,8 @@ $(document).ready(function () {
       url: `https://api.pdflayer.com/api/convert?access_key=4e0027132b927229545c6c2ab2dfd541&document_url=${window.location.href}&document_name=My_cart.pdf&page_siz=A4&margin_top=25&margin_bottom=25&margin_left=25&margin_right=25`,
       type: "GET",
       dataType: "json",
+    }).then(function (resp) {
+      console.log(resp)
     })
   })
 
@@ -401,7 +403,7 @@ function generateRecipe(name, time, ingredients, instructions) {
 }
 
 //Add Notification to tell user added ingredients, instructions etc.
-
+var myRec = {};
 $("#previewButton").on("click", function () {
   var recipeName = $("#recipeNameInput").val();
   var cookTime = $("#cookTimeInput").val();
@@ -432,9 +434,8 @@ function showAlert(str, type) {
 //Add more data to our recipe Cards? Food Type? Etc...
 
 // BUTTON SAVE MY RECIPE on create_recipes.html
-
+var myRecipes = JSON.parse(window.localStorage.getItem("myRecipes")) || [];
 $("#saveLocalStorage").on("click", function () {
-  //myRecipes
   myRecipes.push(myRec);
   window.localStorage.setItem("myRecipes", JSON.stringify(myRecipes));
   myRec = {};
