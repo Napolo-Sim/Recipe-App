@@ -34,7 +34,7 @@ $(document).ready(function () {
       $("#recipeAmount").text(`You have ${nbRecipesCart} recipes in your cart`)
 
       $("#table")
-        .prepend(`
+        .append(`
               <tr>
                 <th data-id="${i}" scope="col">${indexDisplayCart[1]} ${indexDisplayCart[2]}</th>
                 <th data-id="${i}" scope="col">${indexDisplayCart[0]}</th>
@@ -80,7 +80,7 @@ $(document).ready(function () {
   $("#pdf").on("click", function () {
     console.log(window.location.href);
     $.ajax({
-      url: `http://api.pdflayer.com/api/convert?access_key=4e0027132b927229545c6c2ab2dfd541&document_url=https://${window.location.href}&document_name=My_cart.pdf&page_siz=A4&margin_top=25&margin_bottom=25&margin_left=25&margin_right=25`,
+      url: `https://api.pdflayer.com/api/convert?access_key=4e0027132b927229545c6c2ab2dfd541&document_url=https://${window.location.href}&document_name=My_cart.pdf&page_siz=A4&margin_top=25&margin_bottom=25&margin_left=25&margin_right=25`,
       type: "GET",
       dataType: "json",
     })
