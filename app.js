@@ -374,7 +374,7 @@ $("#addIngredients").on("click", function (e) {
     );
     arrIngredients.push(
         //Removed "#" and replaced with " "; make sure there is no conflict
-        ingredientsInput + " " + ammountInput + " " + "(" + unitInput + ")"
+        ingredientsInput + "#" + ammountInput + "#" + "(" + unitInput + ")"
     );
     $("#ingredientsInput").val("");
     $("#ammountInput").val("");
