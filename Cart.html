@@ -9,6 +9,7 @@
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
     <link rel="stylesheet" href="./style.css" />
     <link rel="shortcut icon" href="./Lulu Favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
     <title>Lulu's - Cart</title>
 </head>
 
@@ -16,13 +17,13 @@
     <!-- NAV ELEMENTS -->
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="./index.html">Lulu's Recipes</a>
+        <a style="font-family: 'Satisfy', cursive;" class="navbar-brand" href="./index.html">Lulu's Recipes</a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
+        <!-- DROPDOWN FOR NAV BAR -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
@@ -36,58 +37,50 @@
                         <i class="fas fa-shopping-cart"></i>
                     </a>
                 </li>
-                <!-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li> -->
             </ul>
         </div>
     </nav>
 
     <!-- JUMBOTRON AND SEARCH ELEMENTS -->
 
-    <div class="jumbotron jumbotron-fluid" style="
-        background-image: url(https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80);
-        background-size: 100%;
-      ">
-        <div class="container justify-center">
-            <h1>Cart</h1>
+    <div class="jumbotron jumbotron-fluid"
+        style="
+        background-image: url(https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80); background-size: 100%; background-position: center; background-size: 100%; ">
+        <div class=" container justify-center">
+            <h1 class="p-0" style="font-family: 'Satisfy', cursive; color: whitesmoke;  font-size: 400%;">Cart</h1>
         </div>
     </div>
 
-    <!-- Displayed Ingredients & Cart List -->
-    <div class="container">
+    <!-- DISPLAY INGREDIENTS AND RECIPE NAMES -->
+
+    <div id="toremove" class="container">
+        <!-- COUNT RECIPES AND BUTTONS -->
         <div class="row">
             <h5 id="recipeAmount"></h5>
             <button id="clearCart" class="mb-5 btn btn-primary ml-auto mr-2">Clear</button>
             <button id="pdf" class="mb-5 btn btn-primary mr-2">PDF</button>
         </div>
         <div class="row">
+            <!-- TABLE OF INGREDIENTS -->
             <table class="table table-striped">
                 <thead>
+                    <!-- TABLE HEADING -->
                     <tr>
                         <th scope="col">Amount</th>
                         <th scope="col">Ingredients</th>
                         <th scope="col">Recipe</th>
                     </tr>
-                <tbody id="table">
-
-                </tbody>
+                    <!-- TABLE CONTENT -->
+                <tbody id="table"></tbody>
                 </thead>
             </table>
         </div>
     </div>
+
     <!-- SCRIPTS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 

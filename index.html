@@ -9,19 +9,20 @@
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
     <link rel="stylesheet" href="./style.css">
     <link rel="shortcut icon" href="./Lulu Favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
     <title>Lulu's - Home</title>
 </head>
 
 <body>
     <!-- NAV ELEMENTS -->
-
     <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="./index.html">Lulu's Recipes</a>
+        <a style="font-family: 'Satisfy', cursive;" id="homePageLink" class="navbar-brand" href="./index.html">Lulu's
+            Recipes</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
+        <!-- DROPDOWN FOR NAV BAR -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
@@ -35,32 +36,58 @@
                         <i class="fas fa-shopping-cart"></i>
                     </a>
                 </li>
-                <!-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li> -->
             </ul>
         </div>
     </nav>
 
-    <!-- JUMBOTRON AND SEARCH ELEMENTS -->
+    <!-- HUGE HOME VIDEO DISPLAY AND ELEMENTS -->
+    <header>
+        <div class="overlay"></div>
+        <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+            <source
+                src="https://storage.coverr.co/videos/ZX75uERqcCXB202uB02rFAT7ZURNraEqxl?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6IjExNDMyN0NEOTRCMUFCMTFERTE3IiwiaWF0IjoxNTg5MjQxMTEyfQ.4VBLVPQNC8_D_UxPjBMn2zD2V3T-hpiq85awpW6o8OM"
+                type="video/mp4">
+        </video>
+        <div class="container h-100">
+            <div class="d-flex h-100 text-center align-items-center">
+                <!-- HOME PAGE VIDEO TEXT -->
+                <div class="w-100 text-white">
+                    <h1 style="font-family: 'Satisfy', cursive;" class="display-4">Manage Your Recipes</h1>
+                    <p id="headSub" class="lead mb-0">Find | Create | Store </p>
+                    <p class="lead mb-0">All in One App</p>
+                    <div class="container justify-center ">
+                        <!-- HOME SEARCH BAR -->
+                        <form class="form-inline justify-content-center m-2">
+                            <input type="search" id="userInput" placeholder="Try Healthy food with chicken" autofocus
+                                class="form-control form-control-lg col-6 " aria-label="Search">
+                            <input class="btn btn-dark form-control form-control-xl col-2 ml-2" type="submit"
+                                value="Search" id="userSubmit" style="opacity: 90%;" />
+                        </form>
+                        <!-- RECIPE FILTERS -->
+                        <div class="text-center m-2">
+                            <button class="filter btn btn-danger m-1" style="opacity: 90%;">Mexican</button>
+                            <button class="filter btn btn-danger m-1" style="opacity: 90%;">Chinese</button>
+                            <button class="filter btn btn-danger m-1" style="opacity: 90%;">French</button>
+                            <button class="filter btn btn-danger m-1" style="opacity: 90%;">Italian</button>
+                            <button class="filter btn btn-danger m-1" style="opacity: 90%;">Indian</button>
+                            <button class="filter btn btn-danger m-1" style="opacity: 90%;">American</button>
+                            <button class="filter btn btn-danger m-1" style="opacity: 90%;">Japanese</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-    <div class="jumbotron jumbotron-fluid m-0"
+    <!-- JUMBOTRON AND SEARCH ELEMENTS -->
+    <div id="homeSearchBar" class="jumbotron jumbotron-fluid m-0"
         style="background-image: url(https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80); background-size: 100%;">
         <div class="container justify-center ">
-            <form class="form-inline m-2">
+            <form class="form-inline justify-content-center m-2">
                 <input type="search" id="userInput" placeholder="Try Healthy food with chicken" autofocus
-                    class="form-control col-6" aria-label="Search">
-                <input class="btn btn-dark col-2 ml-2" type="submit" value="Search" id="userSubmit"
-                    style="opacity: 90%;" />
+                    class="form-control form-control-lg col-6" aria-label="Search">
+                <input class="btn btn-dark form-control form-control-xl col-2 ml-2" type="submit" value="Search"
+                    id="userSubmit" style="opacity: 90%;" />
             </form>
             <div class="text-center m-2">
                 <button class="filter btn btn-danger m-1" style="opacity: 90%;">Mexican</button>
@@ -76,59 +103,55 @@
 
 
     <!-- RESULTS FROM API CALL -->
-
-    <div class="container justify-center">
-        <div id="alert" class="alert alert-success mt-2"></div>
-        <div id="displayRecipe" class="row">
-            <!-- content generated for recipes -->
-        </div>
-    </div>
-
-    <!-- <video autoplay loop muted id="myVideo">
-        <source
-            src="https://ak.picdn.net/shutterstock/videos/1028104280/preview/stock-footage-funny-couple-rear-view-dancing-while-cooking-together-in-kitchen-young-active-family-having-fun.mp4"
-            type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-    <div class="content">
-        <h1>Find and Manage millions of recipes in one click</h1>
-    </div> -->
-
-    <header>
-        <div class="overlay"></div>
-        <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
-            <source
-                src="https://storage.coverr.co/videos/ZX75uERqcCXB202uB02rFAT7ZURNraEqxl?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6IjExNDMyN0NEOTRCMUFCMTFERTE3IiwiaWF0IjoxNTg5MjQxMTEyfQ.4VBLVPQNC8_D_UxPjBMn2zD2V3T-hpiq85awpW6o8OM"
-                type="video/mp4">
-        </video>
-        <div class="container h-100">
-            <div class="d-flex h-100 text-center align-items-center">
-                <div class="w-100 text-white">
-                    <h1 class="display-4">Manage Your Recipes</h1>
-                    <p id="headSub" class="lead mb-0">Find | Create | Store </p>
-                    <p class="lead mb-0">All in One App</p>
-                </div>
+    <div
+        style="background-image: url(https://images.unsplash.com/photo-1454944338482-a69bb95894af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2852&q=80)">
+        <div class="container justify-center">
+            <div id="alert" class="alert alert-success mt-2"></div>
+            <div id="displayRecipe" class="row justify-content-center">
+                <!-- content generated for recipes -->
             </div>
         </div>
-    </header>
 
-    <footer>
-        <div class="wrapper">
-            <ul>
-                <li>
-                    All contributions towards this project go to Hedi Mykhas Napoleon and Shree
-                </li>
-            </ul>
-        </div>
+        <!-- FOOTER -->
+        <footer>
+            <div class=" footer-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-4 col-xs-12 segment-one">
+                            <h2>Background</h2>
+                            <p>Project "Lulu's" began on May 4th, 2020 and was produced by Hedi, Mykhas, Napoleon, and
+                                Shree. The project is dedicated towards helping
+                                individuals search for, create, and store recipes all in one application.</p>
+                        </div>
+                        <div class="col-sm-4 col-xs-12 segment-two">
+                            <h2>Contributors</h2>
+                            <ul>
+                                <li><a href=""></a>Hedi Calabrese</li>
+                                <li><a href=""></a>Myhkas Nallas</li>
+                                <li><a href=""></a>Napoleon Vuong</li>
+                                <li><a href=""></a>Bhagyashree Acharya</li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-4 col-xs-12 segment-three">
+                            <h2>Contact</h2>
+                            <p>Contact us through email</p>
+                            <p>....</p>
+                            <p>...</p>
+                            <p>napolo101@gmail.com</p>
+                            <p>..</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
 
-    </footer>
-
-    <!-- SCRIPTS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="./app.js"></script>
+        <!-- SCRIPTS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script src="./app.js"></script>
 </body>
 
 </html>
