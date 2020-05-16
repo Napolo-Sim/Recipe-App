@@ -30,7 +30,7 @@ $(document).ready(function () {
 
         if (nbRecipesCart === 0) {
             $("thead").hide()
-            $("#toremove").prepend("<p>You have zero item in cart. Why don't you create recipes, and add some elements to the cart ?</p>")
+            $("#toremove").append("<h5>You have zero item in cart. Why don't you create recipes, and add some elements to the cart ?</h5>")
         } else {
             for (var i = 0; i < cart.length; i++) {
                 // Print text to show the number of recipes
